@@ -36,7 +36,7 @@ export default function Settings() {
         formData.append("userId", '1');
         formData.append('profileImg', imgFile);
         //console.log(formData.get('userId'))
-        api.updateUserData(formData).then(data => console.log(data))
+        api.updateUserData(formData).then(data => setDataChanged(true))
     }
 
     function changeProfileImg(e) {
