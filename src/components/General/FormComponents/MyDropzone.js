@@ -4,6 +4,7 @@ import MyModal from '../Modal/MyModal'
 import { BiDownload } from 'react-icons/bi'
 import { AiOutlineFile } from 'react-icons/ai'
 import { Button } from 'react-bootstrap'
+import { baseUrl } from '../../../utils/serverRouting'
 export default function MyDropzone({ name, insertedFiles, onFileUpload, onInputValidation, onChange }) {
     const initalFilesState = insertedFiles || [];
     const [files, setFiles] = useState(initalFilesState);
@@ -45,7 +46,7 @@ export default function MyDropzone({ name, insertedFiles, onFileUpload, onInputV
                                     {files.map((file, idx) => <li key={idx} className='d-flex'>
                                         <AiOutlineFile className='mr-2' />
                                         <span className='file-name-dnd mr-2'>{typeof file.pic_src === 'string' ?
-                                            <a href={`http://localhost:3100/projects/download/${file.pic_src.split('/')[1]}`} onClick={(e) => e.stopPropagation()}>{file.pic_src.split('/')[1].split('_')[1]}</a>
+                                            <a href={`${baseUrl}/projects/download/${file.pic_src.split('/')[1]}`} onClick={(e) => e.stopPropagation()}>{file.pic_src.split('/')[1].split('_')[1]}</a>
                                             : file.name
                                         }
                                         </span>
@@ -60,7 +61,7 @@ export default function MyDropzone({ name, insertedFiles, onFileUpload, onInputV
                                     <div className='mt-4'>
                                         <AiOutlineFile />
                                         <div className='file-name-dnd mr-2'>{typeof files === 'string' ? files.includes('http') ? files :
-                                            <a href={`http://localhost:3100/projects/download/${files.split('/')[1]}`} onClick={(e) => e.stopPropagation()}>{files.split('/')[1].split('_')[1]}</a> :
+                                            <a href={`${baseUrl}/projects/download/${files.split('/')[1]}`} onClick={(e) => e.stopPropagation()}>{files.split('/')[1].split('_')[1]}</a> :
                                             files[0].name}</div>
                                         <div onClick={(e) => {
                                             e.stopPropagation();

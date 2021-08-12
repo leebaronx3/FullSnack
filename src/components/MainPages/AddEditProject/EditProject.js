@@ -16,6 +16,7 @@ import { inputChangeHandler } from '../../../utils/handlers'
 import { validateInput, isFormValid } from '../../../utils/validations'
 import { addNewProject, getProjectData, updateProjectData } from '../../../DAL/projects'
 import userContext from '../../../utils/AuthContext'
+import { getDifficultyLevelsList } from '../../../DAL/staticData'
 
 export default function EditProject() {
 
@@ -25,17 +26,32 @@ export default function EditProject() {
         history.push('/home');
     }
 
+    const [difficultyLevels, setDifficultyLevels] = useState([])
+
     const [disableBtn, setDisableBtn] = useState(true)
     const [loader, setLoader] = useState(true)
     const [madeChanges, setMadeChanges] = useState(false)
     const { pid } = useParams();
     const [projectData, setProjectData] = useState({})
 
+
+    const fetchDifficultyLevels = async () => {
+        const diffLvls = await getDifficultyLevelsList();
+        setDifficultyLevels([...diffLvls])
+    }
+
+    useEffect(() => {
+        fetchDifficultyLevels();
+    }, [])
+
     useEffect(() => {
         (async () => {
             setLoader(true)
             if (context.loggedUser.id) {
-                const fetchedProjectData = await getProjectData(pid)
+                let fetchedProjectData;
+                if (pid !== 'new') {
+                    fetchedProjectData = await getProjectData(pid)
+                }
                 setProjectData({
                     userId: context.loggedUser.id,
                     name: {
@@ -43,7 +59,7 @@ export default function EditProject() {
                         error: ''
                     },
                     difficultyLevel: {
-                        value: fetchedProjectData ? fetchedProjectData.difficulty_level_id : '',
+                        value: fetchedProjectData ? fetchedProjectData.difficulty_level_id || fetchedProjectData.difficulty_level.id : '', // temp
                         error: ''
                     },
                     githubLink: {
@@ -71,6 +87,7 @@ export default function EditProject() {
             }
         })();
     }, [])
+
     const setChangesTrue = () => {
         setMadeChanges(true)
     }
@@ -155,6 +172,7 @@ export default function EditProject() {
                                 </Form.Text>
                                 < ToggleRb
                                     name='difficultyLevel'
+                                    options={difficultyLevels}
                                     checkedValue={projectData.difficultyLevel.value}
                                     onRbChange={(e) => {
                                         setProjectData(inputChangeHandler(e, projectData))

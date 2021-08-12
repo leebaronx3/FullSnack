@@ -373,10 +373,6 @@ footer {
 }
 
 /* Settings */
-.settings input[type="radio"],
-.edit-project input[type="radio"] {
-	display: none;
-}
 .user-profile-img img {
 	object-fit: cover;
 	width: 200px;
@@ -577,6 +573,11 @@ button.forum-post:focus {
 }
 
 /* TOGGLE RB */
+.toggle-rb input[type="radio"],
+.toggle-rb input[type="radio"] {
+	display: none;
+}
+
 .toggle-rb .btn-outline-success:not(:disabled):not(.disabled).active,
 .toggle-rb .btn-outline-success:not(:disabled):not(.disabled):active,
 .toggle-rb .show > .btn-outline-success.dropdown-toggle {

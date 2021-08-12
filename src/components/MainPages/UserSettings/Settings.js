@@ -9,14 +9,16 @@ import userContext from '../../../utils/AuthContext';
 import ToggleRb from '../../General/FormComponents/ToggleRb';
 import { inputChangeHandler } from '../../../utils/handlers';
 import { validateInput, isFormValid } from '../../../utils/validations';
-import { getOccupationsList } from '../../../DAL/staticData';
+import { getGenderList, getOccupationsList } from '../../../DAL/staticData';
 import MySpinner from '../../General/MySpinner';
+import { baseUrl } from '../../../utils/serverRouting';
 export default function Settings() {
     const context = useContext(userContext)
     const history = useHistory();
     const elementRef = useRef();
 
     const [occuptations, setOccupations] = useState([])
+    const [gender, setGender] = useState([])
 
     const [loader, setLoader] = useState(false)
     const [disableBtn, setDisableBtn] = useState(true)
@@ -50,11 +52,15 @@ export default function Settings() {
             error: ''
         }
     })
-    const [previewedPicture, setPreviewedPicture] = useState(`http://localhost:3100/public/${userData.profileImg.value}`)
+    const [previewedPicture, setPreviewedPicture] = useState(`${baseUrl}/public/${userData.profileImg.value}`)
 
     const fetchOccupations = async () => {
         const occupationsOptions = await getOccupationsList()
         setOccupations([...occupationsOptions])
+    }
+    const fetchGender = async () => {
+        const genderOptions = await getGenderList()
+        setGender([...genderOptions])
     }
 
     useEffect(() => {
@@ -63,6 +69,7 @@ export default function Settings() {
         }
         setDisableBtn(true)
         fetchOccupations();
+        fetchGender();
     }, [])
 
     useEffect(() => {
@@ -155,6 +162,7 @@ export default function Settings() {
                             </Form.Label>
                             <ToggleRb
                                 name='gender'
+                                options={gender}
                                 checkedValue={userData.gender.value}
                                 onRbChange={(e) => {
                                     setUserData(inputChangeHandler(e, userData))

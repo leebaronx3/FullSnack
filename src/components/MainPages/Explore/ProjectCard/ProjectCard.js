@@ -7,6 +7,7 @@ import { GrAttachment } from 'react-icons/gr'
 import { BsBarChart } from 'react-icons/bs'
 import image from '../../../../images/img-placeholder.png'
 import MyModal from '../../../General/Modal/MyModal'
+import { baseUrl } from '../../../../utils/serverRouting'
 export default function ProjectCard({ ownsProject, data, invokeExploreRerender }) {
     const history = useHistory();
     return (
@@ -17,7 +18,7 @@ export default function ProjectCard({ ownsProject, data, invokeExploreRerender }
                         <Card.Img variant="top"
                             src={data.projects_pictures.length > 0 ?
                                 data.projects_pictures[0].pic_src.includes('http') ? data.projects_pictures[0]
-                                    : `http://localhost:3100/public/${data.projects_pictures[0].pic_src}`
+                                    : `${baseUrl}/public/${data.projects_pictures[0].pic_src}`
                                 : image}
                             onClick={() => history.push(`/projectdisplay/${data.id}`, data)} />
                     </div>

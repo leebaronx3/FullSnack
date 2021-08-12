@@ -7,9 +7,10 @@ import Notifications from './Notifications/Notifications'
 import { useState, useEffect, useContext } from 'react'
 import { getUsersNewNotifications, updateNotificationsAsRead } from '../../../DAL/events'
 import userContext from '../../../utils/AuthContext'
+import { baseUrl } from '../../../utils/serverRouting'
 export default function MyPopover({ type }) {
 
-    const NOTIFICATIONS_INTERVAL_DURATION = 1000 * 60 * 30;
+    const NOTIFICATIONS_INTERVAL_DURATION = 1000 * 5;
     const context = useContext(userContext);
     const [notifications, setNotifications] = useState([])
     const [updateNotifs, setUpdateNotifs] = useState(false)
@@ -17,7 +18,7 @@ export default function MyPopover({ type }) {
     async function fetchNotifications() {
         if (context.loggedUser.id) {
             const data = await getUsersNewNotifications(context.loggedUser.id)
-            if (data.length > 0) setNotifications([...data])
+            if (data && data.length > 0) setNotifications([...data])
             else setNotifications([])
         }
     }
@@ -64,7 +65,7 @@ export default function MyPopover({ type }) {
                         {
                             type === 'signin' ? 'Sign In' :
                                 type === 'usermenu' ?
-                                    <img src={`http://localhost:3100/public/${context.loggedUser.profile_img}`} className='header-user-img rounded-circle' alt='user profile' />
+                                    <img src={`${baseUrl}/public/${context.loggedUser.profile_img}`} className='header-user-img rounded-circle' alt='user profile' />
                                     :
                                     <div className='mt-n3 ml-3 mr-3'>
                                         <BiBell />

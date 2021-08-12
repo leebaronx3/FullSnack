@@ -1,22 +1,6 @@
 import { ToggleButton, ButtonGroup } from "react-bootstrap";
-import { useState, useEffect } from "react";
-import { getDifficultyLevelsList, getGenderList } from "../../../DAL/staticData";
 
-function ToggleRb({ name, onRbChange, checkedValue }) {
-    const [options, setOptions] = useState([])
-
-    useEffect(() => {
-        (async () => {
-            let options = [];
-            if (name === 'gender') {
-                options = await getGenderList();
-            } else if (name === 'difficultyLevel') {
-                options = await getDifficultyLevelsList()
-            }
-            setOptions([...options])
-        })();
-    }, [])
-
+function ToggleRb({ name, options, onRbChange, checkedValue }) {
     return (
         <div className='toggle-rb'>
             <ButtonGroup >
@@ -27,8 +11,8 @@ function ToggleRb({ name, onRbChange, checkedValue }) {
                         type="radio"
                         variant="outline-success"
                         name={name}
-                        value={name === 'gender' ? radio.id : radio.value}
-                        checked={+checkedValue === (name === 'gender' ? radio.id : radio.value)}
+                        value={name === 'gender' ? radio.id.toString() : radio.value.toString()}
+                        checked={checkedValue ? checkedValue.toString() === (name === 'gender' ? radio.id.toString() : radio.value.toString()) : ''}
                         onChange={(e) => onRbChange(e)}
                     >
                         {radio.label || radio.name}

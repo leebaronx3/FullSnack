@@ -6,6 +6,7 @@ import {
     Redirect,
 } from "react-router-dom";
 
+import ChooseServer from './ChooseServer';
 import Homepage from '../MainPages/Homepage/Homepage';
 import ExplorePage from '../MainPages/Explore/ExplorePage';
 import Settings from '../MainPages/UserSettings/Settings';
@@ -15,6 +16,9 @@ import ProjectDisplay from '../MainPages/ProjectDisplay/ProjectDisplay';
 export default function Routes() {
     return (
         < Switch >
+            <Route path="/server">
+                <ChooseServer />
+            </Route>
             <Route path="/home">
                 <Homepage />
             </Route>

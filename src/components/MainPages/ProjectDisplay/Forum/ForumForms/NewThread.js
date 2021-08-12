@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { addNewThread } from '../../../../../DAL/forum'
 import { addNewNotification } from '../../../../../DAL/events'
+import { getNotificationsTypesList } from '../../../../../DAL/staticData'
 import userContext from '../../../../../utils/AuthContext'
 import { inputChangeHandler } from '../../../../../utils/handlers'
 import { validateInput, isFormValid } from '../../../../../utils/validations'
@@ -45,7 +46,11 @@ export default function NewThread({ relevantData, close, invokeRerender }) {
                     body: newThreadData.body.value
                 })
                 if (context.loggedUser.id !== relevantData.projectsOwnerId) {
-                    await addNewNotification({ type_id: 1, acted_user_id: context.loggedUser.id, notified_user_id: relevantData.projectsOwnerId, project_id: relevantData.projectId })
+                    const notificationsTypes = await getNotificationsTypesList()
+                    await addNewNotification({
+                        type_id: notificationsTypes.find(type => type.name === 'project thread').id,
+                        acted_user_id: context.loggedUser.id, notified_user_id: relevantData.projectsOwnerId, project_id: relevantData.projectId
+                    })
                 }
                 invokeRerender()
             }

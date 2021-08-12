@@ -8,7 +8,7 @@ import userContext from '../../../utils/AuthContext'
 import { Redirect, useHistory } from 'react-router-dom'
 
 export default function FilterSection({ setCardsData, usersDashboard, setLoader, rerender }) {
-    console.log(usersDashboard)
+
     const context = useContext(userContext)
     const [filterByData, setFilterByData] = useState({
         sortBy: 'likes',
@@ -22,10 +22,12 @@ export default function FilterSection({ setCardsData, usersDashboard, setLoader,
     })
 
     useEffect(() => {
-        setFilterByData({
-            ...filterByData,
-            userId: usersDashboard ? context.loggedUser.id : ''
-        })
+        if (!usersDashboard) {
+            delete filterByData['userId']
+        } else {
+            filterByData['userId'] = context.loggedUser.id
+        }
+        setFilterByData({ ...filterByData })
     }, [usersDashboard])
 
 
@@ -44,7 +46,7 @@ export default function FilterSection({ setCardsData, usersDashboard, setLoader,
                 setLoader(false)
             }
         })();
-    }, [usersDashboard, filterByData, rerender])
+    }, [filterByData, rerender])
 
 
     function onInputChangeHandler({ target: { name, value } }) {

@@ -9,10 +9,11 @@ import { FiCode, FiExternalLink } from 'react-icons/fi'
 import { GrAttachment, GrGithub } from 'react-icons/gr'
 import { BsBarChart, BsBook } from 'react-icons/bs'
 import { getProjectData } from '../../../DAL/projects';
+import { getNotificationsTypesList } from '../../../DAL/staticData';
 import { addLike, addNewNotification, getDidUserLikeProject, removeLike } from '../../../DAL/events'
 import MySpinner from '../../General/MySpinner';
 import userContext from '../../../utils/AuthContext';
-
+import { baseUrl } from '../../../utils/serverRouting';
 export default function ProjectDisplay() {
     const context = useContext(userContext)
     const { pid } = useParams();
@@ -59,7 +60,7 @@ export default function ProjectDisplay() {
                 }
             })
         })();
-    }, [didUserLike])
+    }, [didUserLike, pid])
 
     useEffect(() => {
         (async () => {
@@ -75,6 +76,7 @@ export default function ProjectDisplay() {
     }, [projectsData])
 
     async function handleLikeBtnClick() {
+        const notificationsTypes = await getNotificationsTypesList()
         if (context.loggedUser.id) {
             if (didUserLike) {
                 await removeLike(context.loggedUser.id, projectsData.id)
@@ -82,7 +84,7 @@ export default function ProjectDisplay() {
             } else {
                 await addLike({ userId: context.loggedUser.id, projectId: projectsData.id })
                 setDidUserLike(true)
-                if (context.loggedUser.id !== projectsData.user.id) await addNewNotification({ type_id: 2, acted_user_id: context.loggedUser.id, notified_user_id: projectsData.user.id, project_id: projectsData.id })
+                if (context.loggedUser.id !== projectsData.user.id) await addNewNotification({ type_id: notificationsTypes.find(type => type.name === 'project like').id, acted_user_id: context.loggedUser.id, notified_user_id: projectsData.user.id, project_id: projectsData.id })
             }
         } else {
             setError(true)
@@ -113,7 +115,7 @@ export default function ProjectDisplay() {
                         {projectsData.pictures.map((pic, idx) => {
                             return (
                                 <Carousel.Item key={idx}>
-                                    <img className="d-block w-100" src={`http://localhost:3100/public/${pic}`} alt='project example' />
+                                    <img className="d-block w-100" src={`${baseUrl}/public/${pic}`} alt='project example' />
                                 </Carousel.Item>
                             )
                         })}
@@ -152,7 +154,7 @@ export default function ProjectDisplay() {
                                 <GrAttachment className='mr-3' />
                                 <div>
                                     <h3 className='text-dark'>Project's Assets</h3>
-                                    <a href={`http://localhost:3100/projects/download/${projectsData.assetsSrc.split('/')[1]}`} >{projectsData.name} Assets <BiDownload className='ml-1' /></a>
+                                    <a href={`${baseUrl}/projects/download/${projectsData.assetsSrc.split('/')[1]}`} >{projectsData.name} Assets <BiDownload className='ml-1' /></a>
                                 </div>
                             </div>}
                             {projectsData.githubLink && <div className='d-flex mt-3'>

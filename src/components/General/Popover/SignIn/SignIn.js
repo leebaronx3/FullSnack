@@ -7,6 +7,7 @@ import { inputChangeHandler } from '../../../../utils/handlers';
 import { validateInput, isFormValid } from '../../../../utils/validations'
 import { login } from '../../../../DAL/users'
 import userContext from '../../../../utils/AuthContext';
+import Cookies from "js-cookie"; // flask
 
 export default function SignIn() {
     const [loader, setLoader] = useState(false)
@@ -39,6 +40,7 @@ export default function SignIn() {
 
             if (loginRes.id) {
                 context.setLoggedUser(loginRes);
+                Cookies.set('fsCookie', loginRes.id) // flask
             }
         } else {
             setLoginData({

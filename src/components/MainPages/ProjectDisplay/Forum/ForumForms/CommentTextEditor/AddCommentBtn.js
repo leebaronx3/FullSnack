@@ -3,10 +3,11 @@ import { MdSend } from 'react-icons/md'
 import { Button } from 'react-bootstrap'
 import { addNewComment } from '../../../../../../DAL/forum'
 import { addNewNotification } from '../../../../../../DAL/events'
+import { getNotificationsTypesList } from '../../../../../../DAL/staticData';
 import userContext from '../../../../../../utils/AuthContext'
 export default function AddCommentBtn({ comment, threadRelevantData, returnError, invokeRerender }) {
-    const context = useContext(userContext)
 
+    const context = useContext(userContext)
     const validateCommentBlocks = () => {
         let hasText = false;
         if (comment.blocks) {
@@ -27,13 +28,13 @@ export default function AddCommentBtn({ comment, threadRelevantData, returnError
                     thread_id: threadRelevantData.threadId,
                     text: JSON.stringify(comment)
                 })
-
+                const notificationsTypes = await getNotificationsTypesList()
                 if (context.loggedUser.id !== threadRelevantData.threadOwnerId) {
-                    await addNewNotification({ type_id: 4, acted_user_id: context.loggedUser.id, notified_user_id: threadRelevantData.threadOwnerId, project_id: threadRelevantData.projectId })
+                    await addNewNotification({ type_id: notificationsTypes.find(type => type.name === 'thread comment').id, acted_user_id: context.loggedUser.id, notified_user_id: threadRelevantData.threadOwnerId, project_id: threadRelevantData.projectId })
                 }
 
                 if (threadRelevantData.threadOwnerId !== threadRelevantData.projectOwnerId && context.loggedUser.id !== threadRelevantData.projectOwnerId) {
-                    await addNewNotification({ type_id: 3, acted_user_id: context.loggedUser.id, notified_user_id: threadRelevantData.projectOwnerId, project_id: threadRelevantData.projectId })
+                    await addNewNotification({ type_id: notificationsTypes.find(type => type.name === 'project comment').id, acted_user_id: context.loggedUser.id, notified_user_id: threadRelevantData.projectOwnerId, project_id: threadRelevantData.projectId })
                 }
                 invokeRerender()
             } else {

@@ -1,8 +1,9 @@
+import { baseUrl } from "../utils/serverRouting"
 
 //GET
 const getUserData = async userId => {
     try {
-        const res = await fetch(`http://localhost:3100/users/${userId}`, { method: 'GET', credentials: 'include' })
+        const res = await fetch(`${baseUrl}/users/${userId}`, { method: 'GET', credentials: 'include' })
         return await res.json();
     } catch (err) {
         console.log(err)
@@ -12,7 +13,7 @@ const getUserData = async userId => {
 //PUT
 const updateUserData = async updatedUserData => {
     try {
-        const res = await fetch(`http://localhost:3100/users/${updatedUserData.get('userId')}`, {
+        const res = await fetch(`${baseUrl}/users/${updatedUserData.get('userId')}`, {
             method: 'PUT',
             body: updatedUserData,
             credentials: 'include'
@@ -25,7 +26,7 @@ const updateUserData = async updatedUserData => {
 
 const updateUserPassword = async updatedPasswordData => {
     try {
-        const res = await fetch(`http://localhost:3100/users/password/${updatedPasswordData.userId}`, {
+        const res = await fetch(`${baseUrl}/users/password/${updatedPasswordData.userId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedPasswordData),
@@ -40,7 +41,7 @@ const updateUserPassword = async updatedPasswordData => {
 //POST
 const login = async loginData => {
     try {
-        const res = await fetch(`http://localhost:3100/users/login`, {
+        const res = await fetch(`${baseUrl}/users/login`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
@@ -55,7 +56,7 @@ const login = async loginData => {
 
 const addNewUser = async newUsersData => {
     try {
-        const res = await fetch(`http://localhost:3100/users`, {
+        const res = await fetch(`${baseUrl}/users`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newUsersData),

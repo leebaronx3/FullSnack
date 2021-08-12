@@ -9,21 +9,22 @@ import MySpinner from '../../General/MySpinner'
 import userContext from '../../../utils/AuthContext'
 export default function Explore({ type }) {
 
+
     const context = useContext(userContext)
     const { uid } = useParams();
     const history = useHistory();
     const [load, setLoad] = useState(true)
     const [cardsData, setCardsData] = useState([])
-    const [isUsersDashboard, setIsUsersDashboard] = useState(false)
+    const [isUsersDashboard, setIsUsersDashboard] = useState(!!type)
     const [rerender, setRerender] = useState(true)
 
     useEffect(() => {
-        if (uid && context.loggedUser.id && uid == context.loggedUser.id) {
+        if (type && uid && context.loggedUser.id && uid == context.loggedUser.id) {
             setIsUsersDashboard(true)
         } else {
             setIsUsersDashboard(false);
-            history.push('/explore')
         }
+
     }, [type])
 
 
